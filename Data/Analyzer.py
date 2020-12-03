@@ -1,36 +1,28 @@
-import json
-import pandas as pd
-import numpy as np
-import random
 import os
-import matplotlib.pyplot as plt
+import random
+
 import matplotlib.image as img
+import matplotlib.pyplot as plt
+import numpy as np
 from mdutils.mdutils import MdUtils
+
+from Data.Parser import Parser
 
 
 class DataAnalyzer(object):
     def __init__(self, data_path):
         self._images_path = os.path.join(data_path, 'images')
-        self._labels_file = os.path.join(data_path, 'module_metadata.json')
+        self._parser = Parser(data_path)
         self._results = MdUtils(file_name='results', title='Overview')
 
-        self._labels_df = None
         self._num_images = None
-        self._labels = None
         self._counts = None
         self._image_shape = None
         self._image_shape_mean = None
-        self._image_list = None
-
-    def _read_metadata(self):
-        with open(self._labels_file, 'r') as f:
-            self._labels_df = pd.DataFrame(json.load(f))
-        self._image_list = [i[7:] for i in self._labels_df.loc['image_filepath'].tolist()]
 
     def _compute_stats(self):
-        self._num_images = self._labels_df.shape[1]
-        self._labels = self._labels_df.loc['anomaly_class'].unique()
-        self._counts = self._labels_df.loc['anomaly_class'].value_counts().to_dict()
+        self._num_images = self._parser.data.shape[1]
+        self._counts = self._parser.data.loc['anomaly_class'].value_counts().to_dict()
 
     def _plot_random_image(self):
         random_image_file = f'{random.randint(0, self._num_images)}.jpg'
@@ -57,7 +49,7 @@ class DataAnalyzer(object):
 
     def _compute_mean_shape(self):
         h, w = [], []
-        for im in self._image_list:
+        for im in self._parser.image_list:
             print(f'Reading image: {im}')
             image = img.imread(os.path.join(self._images_path, im))
             h.append(image.shape[0])
@@ -69,10 +61,10 @@ class DataAnalyzer(object):
         plt.tight_layout()
         plt.title('Random Image In Each Class')
         j = 1
-        for i in self._labels:
-            image_list = [(k, v) for k, v in enumerate(self._labels_df.loc['anomaly_class']) if v == i]
+        for i in self._parser.labels:
+            image_list = [(k, v) for k, v in enumerate(self._parser.data.loc['anomaly_class']) if v == i]
             random_selection = random.choice(image_list)
-            image_path = self._labels_df.loc['image_filepath'].tolist()[random_selection[0]]
+            image_path = self._parser.data.loc['image_filepath'].tolist()[random_selection[0]]
             image = img.imread(os.path.join(self._images_path, image_path[7:]))
             plt.subplot(4, 3, j)
             j += 1
@@ -87,7 +79,7 @@ class DataAnalyzer(object):
         plt.close(fig)
 
     def analyze(self):
-        self._read_metadata()
+        self._parser.parse()
         self._compute_stats()
         self._plot_random_image()
         self._compute_mean_shape()
@@ -95,9 +87,9 @@ class DataAnalyzer(object):
 
     def save_results(self):
         self._results.new_paragraph(f'Number of images: {self._num_images}')
-        self._results.new_paragraph(f'Number of unique classes: {len(self._labels)}')
+        self._results.new_paragraph(f'Number of unique classes: {len(self._parser.labels)}')
         self._results.new_paragraph(f'Class names:')
-        self._results.new_list(items=self._labels)
+        self._results.new_list(items=self._parser.labels)
         self._results.new_paragraph(f'Number of images per class: ')
         self._results.new_list(items=[f'{k}: {v}' for k, v in self._counts.items()])
         self._results.new_paragraph(f'Image shape: {self._image_shape}')
