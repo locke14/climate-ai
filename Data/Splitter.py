@@ -1,4 +1,6 @@
 import os
+import shutil
+
 from Data.Parser import Parser
 
 
@@ -10,7 +12,12 @@ class Splitter(object):
         self._parser = Parser(data_path)
 
     def split(self):
-        pass
+        self._parser.parse()
+        shutil.rmtree(self._out_path)
+        os.makedirs(self._out_path)
+        for d in ['test', 'train']:
+            for label in self._parser.labels:
+                os.makedirs(os.path.join(self._out_path, d, label))
 
 
 if __name__ == '__main__':
