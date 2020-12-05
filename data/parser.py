@@ -31,6 +31,9 @@ class Parser(object):
     def labels(self):
         return self._labels
 
+    def get_label_images(self, label):
+        return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == label]
+
 
 if __name__ == '__main__':
     parser = Parser('../')

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mdutils.mdutils import MdUtils
 
-from Data.Parser import Parser
+from data.parser import Parser
 
 
 class DataAnalyzer(object):
@@ -60,16 +60,16 @@ class DataAnalyzer(object):
         fig = plt.figure(figsize=(10, 10))
         plt.tight_layout()
         plt.title('Random Image In Each Class')
-        j = 1
-        for i in self._parser.labels:
-            image_list = [(k, v) for k, v in enumerate(self._parser.data.loc['anomaly_class']) if v == i]
+        i = 1
+        for label in self._parser.labels:
+            image_list = self._parser.get_label_images(label)
             random_selection = random.choice(image_list)
-            image_path = self._parser.data.loc['image_filepath'].tolist()[random_selection[0]]
+            image_path = self._parser.data.loc['image_filepath'].tolist()[random_selection]
             image = img.imread(os.path.join(self._images_path, image_path[7:]))
-            plt.subplot(4, 3, j)
-            j += 1
+            plt.subplot(4, 3, i)
+            i += 1
             plt.subplots_adjust(hspace=1, wspace=1)
-            plt.title(f'Class: {i}')
+            plt.title(f'Class: {label}')
             cur_axes = plt.gca()
             cur_axes.axes.get_xaxis().set_ticks([])
             cur_axes.axes.get_yaxis().set_ticks([])
