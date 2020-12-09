@@ -74,5 +74,5 @@ class ResNetTrainer(object):
 
 
 if __name__ == '__main__':
-    trainer = ResNetTrainer('../images-split', (40, 32, 1), 12)
+    trainer = ResNetTrainer('../images-split', (40, 32, 3), 12)
     trainer.train()
