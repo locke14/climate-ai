@@ -42,7 +42,7 @@ class CNNTrainer(object):
 
     def flow_from_train_dir(self, batch_size=32):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
-                                                         target_size=self._input_shape,
+                                                         target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
                                                          color_mode='grayscale',
                                                          class_mode='categorical',
@@ -51,16 +51,16 @@ class CNNTrainer(object):
 
     def flow_from_validation_dir(self, batch_size=32):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
-                                                         target_size=self._input_shape,
+                                                         target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
                                                          color_mode='grayscale',
                                                          class_mode='categorical',
                                                          subset='validation',
-                                                         shuffle=True)
+                                                         shuffle=False)
 
     def flow_from_test_dir(self, batch_size=32):
         return self._test_generator.flow_from_directory(os.path.join(self._data_path, 'test'),
-                                                        target_size=self._input_shape,
+                                                        target_size=self._input_shape[:2],
                                                         batch_size=batch_size,
                                                         color_mode='grayscale',
                                                         class_mode='categorical')
@@ -68,8 +68,8 @@ class CNNTrainer(object):
     def train(self, epochs=20):
         self.init_model()
         self.init_generators()
-        self._model.model.fit(self.flow_from_train_dir,
-                              validation_data=self.flow_from_validation_dir,
+        self._model.model.fit(self.flow_from_train_dir(),
+                              validation_data=self.flow_from_validation_dir(),
                               epochs=epochs)
 
 
