@@ -41,4 +41,4 @@ class ResNetModel(object):
 if __name__ == '__main__':
     model = ResNetModel((40, 32, 3), 12)
     model.init(32, 128, 0.5)
-    model.compile('binary_crossentropy', 'SGD', ['accuracy'])
+    model.compile('categorical_crossentropy', 'SGD', ['accuracy'])

@@ -17,7 +17,7 @@ class ResNetTrainer(object):
     def init_model(self):
         self._model = ResNetModel(self._input_shape, self._num_classes)
         self._model.init(32, 128, 0.5)
-        self._model.compile('binary_crossentropy', 'SGD', ['accuracy'])
+        self._model.compile('categorical_crossentropy', 'SGD', ['accuracy'])
 
     def init_generators(self, validation_split=0.2):
         self._train_generator = ImageDataGenerator(rotation_range=0.0,
