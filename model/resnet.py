@@ -1,20 +1,18 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dropout, Dense, Flatten, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling2D
 from tensorflow.keras.applications import ResNet50
 
+from model.base_model import BaseModel
 
-class ResNetModel(object):
+
+class ResNetModel(BaseModel):
     def __init__(self, input_shape, num_classes):
-        self._input_shape = input_shape
-        self._num_classes = num_classes
-        self._model = None
-
-    @property
-    def model(self):
-        return self._model
+        super().__init__(input_shape, num_classes)
 
     def init(self, num_training_layers, nodes, dropout):
-        resnet_model = ResNet50(input_shape=self._input_shape, include_top=False, weights='imagenet')
+        resnet_model = ResNet50(input_shape=self._input_shape,
+                                include_top=False,
+                                weights='imagenet')
 
         for layer in resnet_model.layers[:-num_training_layers]:
             layer.trainable = False
@@ -23,7 +21,6 @@ class ResNetModel(object):
 
         self._model.add(resnet_model)
 
-        # self._model.add(Flatten())
         self._model.add(GlobalAveragePooling2D())
 
         self._model.add(Dense(nodes, activation='relu'))
@@ -31,12 +28,6 @@ class ResNetModel(object):
         self._model.add(Dropout(dropout))
 
         self._model.add(Dense(self._num_classes, activation='softmax'))
-
-    def summary(self):
-        print(self._model.summary())
-
-    def compile(self, loss, optimizer, metrics):
-        self._model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
 
 
 if __name__ == '__main__':
