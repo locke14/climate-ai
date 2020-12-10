@@ -47,4 +47,4 @@ class CNNModel(object):
 if __name__ == '__main__':
     model = CNNModel((40, 24, 1), 12)
     model.init([32, 64, 64], 128, 3, 2, 0.5)
-    model.compile('categorical_crossentropy', 'SGD', ['accuracy'])
+    model.compile('categorical_crossentropy', 'SGD', ['precision'])

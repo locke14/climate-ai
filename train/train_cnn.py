@@ -1,6 +1,8 @@
 import os
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
+from mdutils.mdutils import MdUtils
 
 from model.cnn import CNNModel
 
@@ -13,6 +15,7 @@ class CNNTrainer(object):
         self._model = None
         self._train_generator = None
         self._test_generator = None
+        self._train_history = None
 
     def init_model(self):
         self._model = CNNModel(self._input_shape, self._num_classes)
@@ -68,11 +71,33 @@ class CNNTrainer(object):
     def train(self, epochs=20):
         self.init_model()
         self.init_generators()
-        self._model.model.fit(self.flow_from_train_dir(),
-                              validation_data=self.flow_from_validation_dir(),
-                              epochs=epochs)
+        self._train_history = self._model.model.fit(self.flow_from_train_dir(),
+                                                    validation_data=self.flow_from_validation_dir(),
+                                                    epochs=epochs)
+
+    def plot_history(self):
+        fig = plt.figure()
+        plt.plot(self._train_history.history['accuracy'])
+        plt.plot(self._train_history.history['val_accuracy'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.savefig('cnn_accuracy.png')
+        plt.close(fig)
+
+        fig = plt.figure()
+        plt.plot(self._train_history.history['loss'])
+        plt.plot(self._train_history.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.savefig('cnn_loss.png')
+        plt.close(fig)
 
 
 if __name__ == '__main__':
     trainer = CNNTrainer('../images-split', (40, 24, 1), 12)
     trainer.train()
+    trainer.plot_history()
