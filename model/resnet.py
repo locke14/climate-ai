@@ -1,5 +1,5 @@
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dropout, Dense, Flatten
+from tensorflow.keras.layers import Dropout, Dense, Flatten, GlobalAveragePooling2D
 from tensorflow.keras.applications import ResNet50
 
 
@@ -23,7 +23,8 @@ class ResNetModel(object):
 
         self._model.add(resnet_model)
 
-        self._model.add(Flatten())
+        # self._model.add(Flatten())
+        self._model.add(GlobalAveragePooling2D())
 
         self._model.add(Dense(nodes, activation='relu'))
 

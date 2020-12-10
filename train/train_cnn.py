@@ -5,6 +5,25 @@ import matplotlib.pyplot as plt
 from mdutils.mdutils import MdUtils
 
 from model.cnn import CNNModel
+from tensorflow.keras import backend as k
+
+
+def recall(y_true, y_pred):
+    true_positives = k.sum(k.round(k.clip(y_true * y_pred, 0, 1)))
+    possible_positives = k.sum(k.round(k.clip(y_true, 0, 1)))
+    return true_positives / (possible_positives + k.epsilon())
+
+
+def precision(y_true, y_pred):
+    true_positives = k.sum(k.round(k.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = k.sum(k.round(k.clip(y_pred, 0, 1)))
+    return true_positives / (predicted_positives + k.epsilon())
+
+
+def f1(y_true, y_pred):
+    p = precision(y_true, y_pred)
+    r = recall(y_true, y_pred)
+    return 2 * ((p * r) / (p + r + k.epsilon()))
 
 
 class CNNTrainer(object):
@@ -19,8 +38,8 @@ class CNNTrainer(object):
 
     def init_model(self):
         self._model = CNNModel(self._input_shape, self._num_classes)
-        self._model.init([32, 64, 64], 1024, 3, 2, 0.5)
-        self._model.compile('categorical_crossentropy', 'SGD', ['accuracy'])
+        self._model.init([32, 64, 64], 256, 3, 2, 0.1)
+        self._model.compile('categorical_crossentropy', 'adam', ['accuracy', f1, recall, precision])
 
     def init_generators(self, validation_split=0.2):
         self._train_generator = ImageDataGenerator(rotation_range=0.0,
@@ -43,7 +62,7 @@ class CNNTrainer(object):
                                                   fill_mode='nearest',
                                                   validation_split=0.0)
 
-    def flow_from_train_dir(self, batch_size=32):
+    def flow_from_train_dir(self, batch_size=16):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
                                                          target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
@@ -52,7 +71,7 @@ class CNNTrainer(object):
                                                          subset='training',
                                                          shuffle=True)
 
-    def flow_from_validation_dir(self, batch_size=32):
+    def flow_from_validation_dir(self, batch_size=16):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
                                                          target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
@@ -68,7 +87,7 @@ class CNNTrainer(object):
                                                         color_mode='grayscale',
                                                         class_mode='categorical')
 
-    def train(self, epochs=20):
+    def train(self, epochs=50):
         self.init_model()
         self.init_generators()
         self._train_history = self._model.model.fit(self.flow_from_train_dir(),
@@ -77,21 +96,25 @@ class CNNTrainer(object):
 
     def plot_history(self):
         fig = plt.figure()
-        plt.plot(self._train_history.history['accuracy'])
-        plt.plot(self._train_history.history['val_accuracy'])
-        plt.title('model accuracy')
-        plt.ylabel('accuracy')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig('cnn_accuracy.png')
+        legend = []
+        for m in ['accuracy', 'precision', 'recall', 'f1']:
+            plt.plot(self._train_history.history[m])
+            plt.plot(self._train_history.history[f'val_{m}'])
+            legend.append(f'train: {m}')
+            legend.append(f'test: {m}')
+
+        plt.title('Model Metrics')
+        plt.xlabel('Epoch')
+        plt.legend(legend, loc='upper left')
+        plt.savefig('cnn_metrics.png')
         plt.close(fig)
 
         fig = plt.figure()
         plt.plot(self._train_history.history['loss'])
         plt.plot(self._train_history.history['val_loss'])
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.xlabel('epoch')
+        plt.title('Model Loss')
+        plt.ylabel('Loss')
+        plt.xlabel('Epoch')
         plt.legend(['train', 'test'], loc='upper left')
         plt.savefig('cnn_loss.png')
         plt.close(fig)
