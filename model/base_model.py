@@ -40,3 +40,6 @@ class BaseModel(object):
 
     def compile(self, loss=None, optimizer=None, metrics=None):
         self._model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+
+    def save(self, out_file):
+        self._model.save(out_file)

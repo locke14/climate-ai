@@ -10,7 +10,9 @@ class CNNTrainer(ModelTrainer):
     def init_model(self):
         self._model = CNNModel(self._input_shape, self._num_classes)
         self._model.init([32, 64, 64], 1024, 3, 2, 0.1)
-        self._model.compile('categorical_crossentropy', 'adam', ['accuracy', f1, recall, precision])
+        self._model.compile(loss='categorical_crossentropy',
+                            optimizer='adam',
+                            metrics=['accuracy', f1, recall, precision])
 
 
 if __name__ == '__main__':
@@ -18,3 +20,5 @@ if __name__ == '__main__':
     trainer.train(rescale=1/255., color_mode='grayscale', epochs=5)
     trainer.plot_history(prefix='cnn', output_dir='results')
     print(trainer.evaluate(color_mode='grayscale'))
+    trainer.save_model('./results/cnn.h5')
+
