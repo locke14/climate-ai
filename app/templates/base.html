@@ -18,8 +18,18 @@
         <script src="//apis.google.com/js/platform.js?onload=start"></script>
     </head>
 
+    <style>
+    .demo-layout-transparent {
+        background: url('static/solar_cells.jpg') center / cover;
+    }
+    .demo-layout-transparent .mdl-layout__header,
+    .demo-layout-transparent .mdl-layout__drawer-button {
+    color: white;
+    }
+    </style>
+
     <body>
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <div class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
               <span class="mdl-layout-title">Climate AI</span>
