@@ -13,6 +13,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'I have a dream'
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
+# evaluator = ModelEvaluator('model.h5', '../images-split', (1, 40, 24, 1), 'grayscale')
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
@@ -24,7 +25,12 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Upload')
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     form = UploadForm()
     if form.validate_on_submit():
@@ -34,7 +40,7 @@ def upload_file():
         success = True
     else:
         success = False
-    return render_template('index.html', form=form, success=success)
+    return render_template('upload.html', form=form, success=success)
 
 
 @app.route('/manage')

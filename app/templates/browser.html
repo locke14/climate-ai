@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block content %}
+
 <title>File Browser</title>
 <h1>File Browser</h1>
 <a href="{{ url_for('upload_file') }}">Upload</a> /
@@ -7,3 +10,5 @@
 
 <p>URL: {{ file_url }}</p>
 <img src="{{ file_url }}">
+
+{% endblock %}
