@@ -8,12 +8,14 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
 
+from evaluate.evaluate_model import ModelEvaluator
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'I have a dream'
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
-# evaluator = ModelEvaluator('model.h5', '../images-split', (1, 40, 24, 1), 'grayscale')
+evaluator = ModelEvaluator('model.h5', '../images-split', (1, 40, 24, 1), 'grayscale')
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
@@ -37,10 +39,13 @@ def upload_file():
         for filename in request.files.getlist('photo'):
             name = hashlib.md5(str('admin' + str(time.time())).encode('utf-8')).hexdigest()[:15]
             photos.save(filename, name=name + '.')
+            prediction = evaluator.predict(f'uploads/{name}.jpg')
+            print(prediction)
         success = True
     else:
+        prediction = 'Unknown'
         success = False
-    return render_template('upload.html', form=form, success=success)
+    return render_template('upload.html', form=form, success=success, prediction=prediction)
 
 
 @app.route('/manage')

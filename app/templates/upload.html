@@ -3,17 +3,20 @@
 {% block content %}
 
 <form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    {{ form.photo(multiple="multiple")}}
-    {% for error in form.photo.errors %}
-        <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-    {{ form.submit }}
+    <div class="mdl-grid">
+        {{ form.hidden_tag() }}
+        {{ form.photo(multiple="multiple")}}
+        {% for error in form.photo.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        {{ form.submit }}
+    </div>
 </form>
 
 {% if success %}
 <br>
 <p>Upload Success!</p>
+<p>Prediction: {{ prediction }}</p>
 {% endif %}
 
 {% endblock %}
