@@ -9,7 +9,7 @@ from data.parser import Parser
 class Splitter(object):
     def __init__(self, data_path, split_ratio):
         self._images_path = os.path.join(data_path, 'images-resized')
-        self._out_path = os.path.join(data_path, 'images-resized-split-binary')
+        self._out_path = os.path.join(data_path, 'images-resized-split')
         self._split_ratio = split_ratio
         self._parser = Parser(data_path)
 
@@ -59,5 +59,5 @@ class Splitter(object):
 
 if __name__ == '__main__':
     splitter = Splitter('../', 0.9)
-    # splitter.split()
-    splitter.split_binary()
+    splitter.split()
+    # splitter.split_binary()
