@@ -29,8 +29,8 @@ class Splitter(object):
 
     def copy_images(self, images, base_dir, label):
         for image in images:
-            src = os.path.join(self._images_path, f'{image}.jpg')
-            dst = os.path.join(self._out_path, base_dir, label, f'{image}.jpg')
+            src = os.path.join(self._images_path, image)
+            dst = os.path.join(self._out_path, base_dir, label, image)
             if os.path.isfile(src):
                 print(f'Copying {src} to {dst}')
                 shutil.copy(src, dst)

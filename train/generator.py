@@ -20,14 +20,14 @@ class Generator(object):
                                                          target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
                                                          color_mode=color_mode,
-                                                         class_mode='categorical')
+                                                         class_mode='binary')
 
     def flow_from_validation_dir(self, color_mode='rgb', batch_size=16):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
                                                          target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
                                                          color_mode=color_mode,
-                                                         class_mode='categorical',
+                                                         class_mode='binary',
                                                          subset='validation',
                                                          shuffle=False)
 
@@ -36,4 +36,4 @@ class Generator(object):
                                                         target_size=self._input_shape[:2],
                                                         batch_size=batch_size,
                                                         color_mode=color_mode,
-                                                        class_mode='categorical')
+                                                        class_mode='binary')

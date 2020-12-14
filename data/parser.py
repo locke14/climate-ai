@@ -36,16 +36,19 @@ class Parser(object):
         return ['No-Anomaly', 'Anomaly']
 
     def get_label_images(self, label):
-        return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == label]
+        return [self.data.loc["image_filepath"][k][7:]
+                for k, v in enumerate(self.data.loc['anomaly_class']) if v == label]
 
     def get_no_anomaly_images(self):
-        return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == 'No-Anomaly']
+        return [self.data.loc["image_filepath"][k][7:]
+                for k, v in enumerate(self.data.loc['anomaly_class']) if v == 'No-Anomaly']
 
     def get_anomaly_images(self):
-        return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == 'Anomaly']
+        return [self.data.loc["image_filepath"][k][7:]
+                for k, v in enumerate(self.data.loc['anomaly_class']) if v != 'No-Anomaly']
 
 
 if __name__ == '__main__':
     parser = Parser('../')
     parser.parse()
-    print(parser.labels)
+    print(parser.get_label_images('Offline-Module'))
