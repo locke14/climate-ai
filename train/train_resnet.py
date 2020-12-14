@@ -10,7 +10,7 @@ class ResNetTrainer(ModelTrainer):
 
     def init_model(self):
         self._model = ResNetModel(self._input_shape, self._num_classes)
-        self._model.init(16, 64, 0.25)
+        self._model.init(16, 32, 0.7)
         self._model.compile(loss='categorical_crossentropy',
                             optimizer='adam',
                             metrics=['accuracy', f1, recall, precision])
