@@ -31,8 +31,18 @@ class Parser(object):
     def labels(self):
         return self._labels
 
+    @property
+    def binary_labels(self):
+        return ['No-Anomaly', 'Anomaly']
+
     def get_label_images(self, label):
         return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == label]
+
+    def get_no_anomaly_images(self):
+        return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == 'No-Anomaly']
+
+    def get_anomaly_images(self):
+        return [k for k, v in enumerate(self.data.loc['anomaly_class']) if v == 'Anomaly']
 
 
 if __name__ == '__main__':

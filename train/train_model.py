@@ -23,7 +23,7 @@ class ModelTrainer(object):
         self.init_model()
         self._generator.init(rescale=rescale)
         self._train_history = self._model.model.fit(self._generator.flow_from_train_dir(color_mode=color_mode),
-                                                    validation_data=self._generator.flow_from_validation_dir(color_mode=color_mode),
+                                                    validation_data=self._generator.flow_from_test_dir(color_mode=color_mode),
                                                     epochs=epochs)
 
     def save_model(self, out_file):

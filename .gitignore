@@ -1,6 +1,7 @@
 .idea/*
-images/*
-images-split/*
+images*/*
+
+*.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
