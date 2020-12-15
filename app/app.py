@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'I have a dream'
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
-evaluator = ModelEvaluator('model.h5', (1, 40, 32, 3), 'rgb')
+# evaluator = ModelEvaluator('model.h5', (1, 40, 32, 3), 'rgb')
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
@@ -39,8 +39,9 @@ def upload_file():
         for filename in request.files.getlist('photo'):
             name = hashlib.md5(str('admin' + str(time.time())).encode('utf-8')).hexdigest()[:15]
             photos.save(filename, name=name + '.')
-            prediction = evaluator.predict(f'uploads/{name}.jpg')
-            print(prediction)
+            prediction = 'Anomaly'
+            # prediction = evaluator.predict(f'uploads/{name}.jpg')
+            # print(prediction)
         success = True
     else:
         prediction = 'Unknown'
