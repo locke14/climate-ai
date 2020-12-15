@@ -10,3 +10,4 @@ flask_wtf==0.14.3
 WTForms==2.3.3
 gunicorn==20.0.4
 werkzeug==1.0.1
+Flask-Reuploaded==0.3.2
