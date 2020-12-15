@@ -18,21 +18,11 @@
         <script src="//apis.google.com/js/platform.js?onload=start"></script>
     </head>
 
-    <style>
-    .demo-layout-transparent {
-        background: url('static/solar_cells.jpg') center / cover;
-    }
-    .demo-layout-transparent .mdl-layout__header,
-    .demo-layout-transparent .mdl-layout__drawer-button {
-    color: white;
-    }
-    </style>
-
     <body>
         <div class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
-              <span class="mdl-layout-title">Climate AI</span>
+              <span class="mdl-layout-title">Solar Cell Anomaly Detector</span>
               <div class="mdl-layout-spacer"></div>
               <nav class="mdl-navigation mdl-layout--large-screen-only">
                 <a class="mdl-navigation__link" href="{{ url_for('home') }}">Home</a>
@@ -42,15 +32,6 @@
               </nav>
             </div>
           </header>
-          <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">Climate AI</span>
-            <nav class="mdl-navigation">
-              <a class="mdl-navigation__link" href="{{ url_for('home') }}">Home</a>
-              <a class="mdl-navigation__link" href="{{ url_for('upload_file') }}">Upload</a>
-              <a class="mdl-navigation__link" href="{{ url_for('manage_file') }}">Manage</a>
-              <a class="mdl-navigation__link" href="#">How It Works</a>
-            </nav>
-          </div>
           <main class="mdl-layout__content">
             <div class="page-content">
                 {% block content %} {% endblock %}
@@ -58,10 +39,10 @@
           </main>
           <footer class="mdl-mini-footer">
               <div class="mdl-mini-footer__left-section">
-                <div class="mdl-logo">Climate AI</div>
+                <div class="mdl-logo">Solar Cell Anomaly Detector</div>
                 <ul class="mdl-mini-footer__link-list">
                   <li><a href="{{ url_for('home') }}">Home</a></li>
-                  <li><a href="#">About</a></li>
+                  <li><a href="mailto:kbuddha@mooctors.com">Contact</a>  </li>
                 </ul>
               </div>
           </footer>
