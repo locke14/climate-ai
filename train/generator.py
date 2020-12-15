@@ -15,14 +15,14 @@ class Generator(object):
 
         self._test_generator = ImageDataGenerator()
 
-    def flow_from_train_dir(self, color_mode='rgb', batch_size=16):
+    def flow_from_train_dir(self, color_mode='rgb', batch_size=32):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
                                                          target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
                                                          color_mode=color_mode,
                                                          class_mode='categorical')
 
-    def flow_from_validation_dir(self, color_mode='rgb', batch_size=16):
+    def flow_from_validation_dir(self, color_mode='rgb', batch_size=32):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),
                                                          target_size=self._input_shape[:2],
                                                          batch_size=batch_size,
@@ -31,7 +31,7 @@ class Generator(object):
                                                          subset='validation',
                                                          shuffle=False)
 
-    def flow_from_test_dir(self, color_mode='rgb', batch_size=16):
+    def flow_from_test_dir(self, color_mode='rgb', batch_size=32):
         return self._test_generator.flow_from_directory(os.path.join(self._data_path, 'test'),
                                                         target_size=self._input_shape[:2],
                                                         batch_size=batch_size,

@@ -10,7 +10,7 @@ class ResNetTrainer(ModelTrainer):
 
     def init_model(self):
         self._model = ResNetModel(self._input_shape, self._num_classes)
-        self._model.init(32, 128, 0.5)
+        self._model.init(32, 32, 0.7)
         self._model.compile(loss='categorical_crossentropy',
                             optimizer='adam',
                             metrics=['accuracy', f1, recall, precision])
@@ -18,7 +18,7 @@ class ResNetTrainer(ModelTrainer):
 
 if __name__ == '__main__':
     trainer = ResNetTrainer('../images-resized-split', (40, 32, 3), 12)
-    trainer.train(rescale=None, color_mode='rgb', epochs=50)
+    trainer.train(rescale=None, color_mode='rgb', epochs=75)
     trainer.plot_history(prefix='resnet_no_augmentation_resized', output_dir='results')
     print(trainer.evaluate(color_mode='rgb'))
     trainer.save_model('./results/resnet_no_augmentation_resized.h5')
