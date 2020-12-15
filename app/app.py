@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'I have a dream'
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
-evaluator = ModelEvaluator('model.h5', '../images-split', (1, 40, 24, 1), 'grayscale')
+evaluator = ModelEvaluator('model.h5', (1, 40, 32, 3), 'rgb')
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)

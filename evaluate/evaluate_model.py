@@ -7,7 +7,7 @@ from train.generator import Generator
 
 
 class ModelEvaluator(object):
-    def __init__(self, model_path, data_path, input_shape, color_mode):
+    def __init__(self, model_path, input_shape, color_mode):
         self._input_shape = input_shape
         self._color_mode = color_mode
         self._model = load_model(model_path,
@@ -15,10 +15,18 @@ class ModelEvaluator(object):
                                                  'recall': recall,
                                                  'precision': precision})
 
-        generator = Generator(data_path, self._input_shape)
-        generator.init()
-        class_to_idx = generator.flow_from_train_dir(color_mode=self._color_mode).class_indices
-        self._idx_to_class = {v: k for k, v in class_to_idx.items()}
+        self._idx_to_class = {0: 'Cell',
+                              1: 'Cell-Multi',
+                              2: 'Cracking',
+                              3: 'Diode',
+                              4: 'Diode-Multi',
+                              5: 'Hot-Spot',
+                              6: 'Hot-Spot-Multi',
+                              7: 'No-Anomaly',
+                              8: 'Offline-Module',
+                              9: 'Shadowing',
+                              10: 'Soiling',
+                              11: 'Vegetation'}
 
     def predict(self, input_file):
         im = load_img(input_file, color_mode=self._color_mode)
@@ -28,5 +36,5 @@ class ModelEvaluator(object):
 
 
 if __name__ == '__main__':
-    evaluator = ModelEvaluator('../train/results/cnn.h5', '../images-split', (1, 40, 24, 1), 'grayscale')
-    print(evaluator.predict('../images/1000.jpg'))
+    evaluator = ModelEvaluator('../app/model.h5', (1, 40, 32, 3), 'rgb')
+    print(evaluator.predict('../images-resized-split/train/Hot-Spot/6730.jpg'))
