@@ -11,6 +11,8 @@
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-orange.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
         <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
 
@@ -27,7 +29,6 @@
               <nav class="mdl-navigation mdl-layout--large-screen-only">
                 <a class="mdl-navigation__link" href="{{ url_for('home') }}">Home</a>
                 <a class="mdl-navigation__link" href="{{ url_for('upload_file') }}">Upload</a>
-                <a class="mdl-navigation__link" href="{{ url_for('manage_file') }}">Manage</a>
                 <a class="mdl-navigation__link" href="#">How It Works</a>
               </nav>
             </div>

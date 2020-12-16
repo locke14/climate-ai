@@ -2,21 +2,31 @@
 
 {% block content %}
 
-<form method="POST" enctype="multipart/form-data">
-    <div class="mdl-grid">
-        {{ form.hidden_tag() }}
-        {{ form.photo(multiple="multiple")}}
-        {% for error in form.photo.errors %}
-            <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-        {{ form.submit }}
-    </div>
-</form>
+<!--<form method="POST" enctype="multipart/form-data">-->
+<!--    <div class="mdl-grid">-->
+<!--        {{ form.hidden_tag() }}-->
+<!--        {{ form.photo(multiple="multiple", extra_classes="mdl-button mdl-button&#45;&#45;accent mdl-js-button mdl-js-ripple-effect") }}-->
+<!--        {% for error in form.photo.errors %}-->
+<!--        <span style="color: red;">{{ error }}</span>-->
+<!--        {% endfor %}-->
+<!--        {{ form.submit(extra_classes="mdl-button mdl-button&#45;&#45;accent mdl-js-button mdl-js-ripple-effect") }}-->
+<!--    </div>-->
+<!--</form>-->
 
-{% if success %}
-<br>
-<p>Upload Success!</p>
-<p>Prediction: {{ prediction }}</p>
-{% endif %}
+<form action="{{ url_for('upload_file') }}" class="dropzone">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+
+<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                   href="{{url_for('upload_file')}}">
+                    Predict Anomaly Type
+                </a>
+
+{% for photo, url, prediction in files %}
+    <img src="{{ url }}">
+    <a href="{{ url_for('delete_file', filename=photo) }}">Delete</a>
+{{prediction}}
+    <br>
+{% endfor %}
 
 {% endblock %}
