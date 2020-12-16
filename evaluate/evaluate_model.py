@@ -3,8 +3,6 @@ import numpy as np
 from model.base_model import f1, recall, precision
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
-from train.generator import Generator
-
 
 class ModelEvaluator(object):
     def __init__(self, model_path, input_shape, color_mode):
@@ -28,13 +26,17 @@ class ModelEvaluator(object):
                               10: 'Soiling',
                               11: 'Vegetation'}
 
-    def predict(self, input_file):
+    def predict_from_file(self, input_file):
         im = load_img(input_file, color_mode=self._color_mode)
         arr = img_to_array(im).reshape(self._input_shape)
+        idx = np.argmax(self._model.predict(arr), axis=-1)
+        return self._idx_to_class[idx[0]]
+
+    def predict(self, arr):
         idx = np.argmax(self._model.predict(arr), axis=-1)
         return self._idx_to_class[idx[0]]
 
 
 if __name__ == '__main__':
     evaluator = ModelEvaluator('../app/model.h5', (1, 40, 32, 3), 'rgb')
-    print(evaluator.predict('../images-resized-split/train/Hot-Spot/6730.jpg'))
+    print(evaluator.predict_from_file('../images-resized-split/test/Hot-Spot-Multi/7921.jpg'))
