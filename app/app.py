@@ -7,7 +7,7 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
 from wtforms import SubmitField
 
-from evaluate.evaluate_model import ModelEvaluator
+# from evaluate.evaluate_model import ModelEvaluator
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,7 +17,7 @@ app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png']
 
-evaluator = ModelEvaluator('../app/model.h5', (1, 40, 32, 3), 'rgb')
+# evaluator = ModelEvaluator('../app/model.h5', (1, 40, 32, 3), 'rgb')
 
 CLASSES = [('No-Anomaly',
             ' Nominal solar module',
@@ -77,7 +77,8 @@ def home():
     files_list = os.listdir(app.config['UPLOADED_PHOTOS_DEST'])
     file_urls = [photos.url(filename) for filename in files_list]
 
-    predictions = [evaluator.predict_from_file(f'../app/uploads/{file_name}') for file_name in files_list]
+    predictions = ['Model Not Found' for file_name in files_list]
+    # predictions = [evaluator.predict_from_file(f'../app/uploads/{file_name}') for file_name in files_list]
     # predictions = [evaluator.predict(img_to_array(load_img(photos.path(file_name),
     #                                                        color_mode='rgb')).reshape(1, 40, 32, 3))
     #                for file_name in files_list]
