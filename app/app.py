@@ -64,13 +64,8 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Upload')
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('index.html', classes=CLASSES)
-
-
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
     form = UploadForm()
     if request.method == 'POST':
         request.files['file'].save(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], request.files['file'].filename))
@@ -82,16 +77,22 @@ def upload_file():
     # evaluator.predict(f'uploads/{name}.jpg')
     predictions = ['Vegetation' for filename in files_list]
 
-    return render_template('upload.html',
+    return render_template('index.html',
+                           classes=CLASSES,
                            form=form,
                            files=zip(files_list, file_urls, predictions))
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 
 @app.route('/delete/<filename>')
 def delete_file(filename):
     file_path = photos.path(filename)
     os.remove(file_path)
-    return redirect(url_for('upload_file'))
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':

@@ -3,7 +3,9 @@
 {% block content %}
 
 <style>
-
+.demo-card-wide.mdl-card {
+  width: 512px;
+}
 .demo-card-wide > .mdl-card__title1 {
   color: #fff;
   text-shadow: 2px 2px #000;
@@ -24,6 +26,9 @@
 background-color: #fff;
 }
 
+.dropzone {
+    border: 2px solid rgb(255,171,64);
+}
 
 </style>
 
@@ -39,7 +44,7 @@ background-color: #fff;
                 system designed to supply usable solar power by means of photovoltaics
             </div>
             <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                <a class="mdl-button mdl-button--accent mdl-js-button mdl-js-ripple-effect"
                    href="https://en.wikipedia.org/wiki/Photovoltaic_system" target="_blank">
                     Solar Photovoltaic Systems
                 </a>
@@ -57,7 +62,7 @@ background-color: #fff;
                 A solar cell is the electrical device that can directly convert photons energy into electricity.
             </div>
             <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                <a class="mdl-button mdl-button--accent mdl-js-button mdl-js-ripple-effect"
                    href="https://en.wikipedia.org/wiki/Solar_cell" target="_blank">
                     Solar Cells
                 </a>
@@ -68,15 +73,15 @@ background-color: #fff;
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
     <span class="mdl-card--border">
-    <span class="mdl-button mdl-button--accent">Different Types of Solar Cell Anomalies</span>
+    <span class="mdl-button mdl-button--color">Different Types of Solar Cell Anomalies</span>
 </span>
     <div class="mdl-layout-spacer"></div>
 </div>
 <div class="mdl-grid">
     {% for title, description, image in classes %}
-            <div class="mdl-cell mdl-cell--1-col  mdl-card mdl-shadow--2dp">
+    <div class="mdl-cell mdl-cell--1-col  mdl-card mdl-shadow--2dp">
         <div class="mdl-card__title mdl-card--expand mdl-cell--middle">
-                {{ title }}
+            {{ title }}
         </div>
         <div class="mdl-card__supporting-text mdl-card--expand mdl-cell--center">
             {{ description }}
@@ -88,7 +93,40 @@ background-color: #fff;
                  alt=""
                  style="padding:0px;">
         </div>
-                </div>
-        {% endfor %}
+    </div>
+    {% endfor %}
 </div>
-    {% endblock %}
+<div class="mdl-grid">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+        <form action="{{ url_for('home') }}" class="dropzone"></form>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+        <div class="mdl-card__actions mdl-card--border">
+            <a class="mdl-button mdl-button--accent mdl-js-button mdl-js-ripple-effect"
+               href="{{url_for('home')}}">
+                Predict Anomaly Type
+            </a>
+        </div>
+    </div>
+
+    {% for photo, url, prediction in files %}
+    <div class="mdl-cell mdl-cell--1-col  mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title mdl-card--expand mdl-cell--middle animated pulse infinite animatespan">
+            <span style="color: rgb(0,188,212);font-weight: bold;"> {{ prediction }}</span>
+        </div>
+        <div class="mdl-card__media mdl-card--expand mdl-cell--middle wh">
+            <img src="{{ url }}"
+                 height="150"
+                 border="0"
+                 alt=""
+                 style="padding:0px;">
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+            <a class="mdl-button mdl-button--accent mdl-js-button mdl-js-ripple-effect"
+               href="{{url_for('delete_file', filename=photo)}}">
+                Delete
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
