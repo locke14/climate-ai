@@ -86,8 +86,10 @@ try:
                        custom_objects={'f1': f1,
                                        'recall': recall,
                                        'precision': precision})
+    err = 'Model loaded successfully'
 except OSError as e:
     model = None
+    err = f'Model load failed: {e}'
 
 
 def predict(input_file):
@@ -128,12 +130,13 @@ def home():
     if model:
         predictions = [predict(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], file_name)) for file_name in files_list]
     else:
-        predictions = [file_name for file_name in os.listdir(basedir)]
+        predictions = ['Unknown'] * len(files_list)
 
     return render_template('index.html',
                            classes=CLASSES,
                            form=form,
-                           files=zip(files_list, file_urls, predictions))
+                           files=zip(files_list, file_urls, predictions),
+                           err=err)
 
 
 @app.route('/about')
