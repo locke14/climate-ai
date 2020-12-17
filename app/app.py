@@ -89,7 +89,7 @@ try:
     err = 'Model loaded successfully'
 except OSError as e:
     model = None
-    err = f'Model load failed: {e}'
+    err = f'Model load failed: {e}. Search directory contents: {os.listdir(basedir)}'
 
 
 def predict(input_file):
