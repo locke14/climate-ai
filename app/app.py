@@ -6,8 +6,9 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
 from wtforms import SubmitField
-
-from evaluate.evaluate_model import ModelEvaluator
+from tensorflow.keras import backend as k
+from tensorflow.keras.models import load_model
+import numpy as np
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,7 +18,7 @@ app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png']
 
-evaluator = ModelEvaluator(os.path.join(basedir, 'model.h5'), (1, 40, 32, 3), 'rgb')
+# evaluator = ModelEvaluator(os.path.join(basedir, 'model.h5'), (1, 40, 32, 3), 'rgb')
 
 CLASSES = [('No-Anomaly',
             ' Nominal solar module',
@@ -62,6 +63,54 @@ configure_uploads(app, photos)
 patch_request_class(app)
 
 
+def recall(y_true, y_pred):
+    true_positives = k.sum(k.round(k.clip(y_true * y_pred, 0, 1)))
+    possible_positives = k.sum(k.round(k.clip(y_true, 0, 1)))
+    return true_positives / (possible_positives + k.epsilon())
+
+
+def precision(y_true, y_pred):
+    true_positives = k.sum(k.round(k.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = k.sum(k.round(k.clip(y_pred, 0, 1)))
+    return true_positives / (predicted_positives + k.epsilon())
+
+
+def f1(y_true, y_pred):
+    p = precision(y_true, y_pred)
+    r = recall(y_true, y_pred)
+    return 2 * ((p * r) / (p + r + k.epsilon()))
+
+
+model = load_model(os.path.join(basedir, 'model.h5'),
+                   custom_objects={'f1': f1,
+                                   'recall': recall,
+                                   'precision': precision})
+
+
+def predict(input_file):
+    # model = load_model(os.path.join(basedir, 'model.h5'),
+    #                    custom_objects={'f1': f1,
+    #                                    'recall': recall,
+    #                                    'precision': precision})
+    idx_to_class = {0: 'Cell',
+                    1: 'Cell-Multi',
+                    2: 'Cracking',
+                    3: 'Diode',
+                    4: 'Diode-Multi',
+                    5: 'Hot-Spot',
+                    6: 'Hot-Spot-Multi',
+                    7: 'No-Anomaly',
+                    8: 'Offline-Module',
+                    9: 'Shadowing',
+                    10: 'Soiling',
+                    11: 'Vegetation'}
+
+    im = load_img(input_file, color_mode='rgb')
+    arr = img_to_array(im).reshape((1, 40, 32, 3))
+    idx = np.argmax(model.predict(arr), axis=-1)
+    return idx_to_class[idx[0]]
+
+
 class UploadForm(FlaskForm):
     photo = FileField(validators=[FileAllowed(photos, 'Image Only!'), FileRequired('Choose a file!')])
     submit = SubmitField('Upload')
@@ -77,8 +126,8 @@ def home():
     files_list = os.listdir(app.config['UPLOADED_PHOTOS_DEST'])
     file_urls = [photos.url(filename) for filename in files_list]
 
-    predictions = [file_name for file_name in files_list]
-    # predictions = [evaluator.predict_from_file(f'../app/uploads/{file_name}') for file_name in files_list]
+    # predictions = [file_name for file_name in files_list]
+    predictions = [predict(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], file_name)) for file_name in files_list]
     # predictions = [evaluator.predict(img_to_array(load_img(photos.path(file_name),
     #                                                        color_mode='rgb')).reshape(1, 40, 32, 3))
     #                for file_name in files_list]
