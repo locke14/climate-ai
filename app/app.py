@@ -7,7 +7,7 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
 from wtforms import SubmitField
 
-# from evaluate.evaluate_model import ModelEvaluator
+from evaluate.evaluate_model import ModelEvaluator
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,7 +17,7 @@ app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png']
 
-# evaluator = ModelEvaluator('../app/model.h5', (1, 40, 32, 3), 'rgb')
+evaluator = ModelEvaluator(os.path.join(basedir, 'model.h5'), (1, 40, 32, 3), 'rgb')
 
 CLASSES = [('No-Anomaly',
             ' Nominal solar module',
