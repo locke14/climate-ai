@@ -81,17 +81,16 @@ def f1(y_true, y_pred):
     return 2 * ((p * r) / (p + r + k.epsilon()))
 
 
-model = load_model(os.path.join(basedir, 'trained_model.h5'),
-                   custom_objects={'f1': f1,
-                                   'recall': recall,
-                                   'precision': precision})
+try:
+    model = load_model('trained_model.h5',
+                       custom_objects={'f1': f1,
+                                       'recall': recall,
+                                       'precision': precision})
+except OSError as e:
+    model = None
 
 
 def predict(input_file):
-    # model = load_model(os.path.join(basedir, 'model.h5'),
-    #                    custom_objects={'f1': f1,
-    #                                    'recall': recall,
-    #                                    'precision': precision})
     idx_to_class = {0: 'Cell',
                     1: 'Cell-Multi',
                     2: 'Cracking',
@@ -126,11 +125,10 @@ def home():
     files_list = os.listdir(app.config['UPLOADED_PHOTOS_DEST'])
     file_urls = [photos.url(filename) for filename in files_list]
 
-    # predictions = [file_name for file_name in files_list]
-    predictions = [predict(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], file_name)) for file_name in files_list]
-    # predictions = [evaluator.predict(img_to_array(load_img(photos.path(file_name),
-    #                                                        color_mode='rgb')).reshape(1, 40, 32, 3))
-    #                for file_name in files_list]
+    if model:
+        predictions = [predict(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], file_name)) for file_name in files_list]
+    else:
+        predictions = [file_name for file_name in os.listdir(basedir)]
 
     return render_template('index.html',
                            classes=CLASSES,
