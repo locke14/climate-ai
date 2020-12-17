@@ -81,7 +81,7 @@ def f1(y_true, y_pred):
     return 2 * ((p * r) / (p + r + k.epsilon()))
 
 
-model = load_model(os.path.join(basedir, 'model.h5'),
+model = load_model(os.path.join(basedir, 'trained_model.h5'),
                    custom_objects={'f1': f1,
                                    'recall': recall,
                                    'precision': precision})
