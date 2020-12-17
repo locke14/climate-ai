@@ -74,7 +74,7 @@ def home():
         request.files['file'].save(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], request.files['file'].filename))
         return redirect(url_for('upload_file'))
 
-    files_list = os.listdir('/uploads')
+    files_list = basedir
     # files_list = os.listdir(app.config['UPLOADED_PHOTOS_DEST'])
     file_urls = [photos.url(filename) for filename in files_list]
 
