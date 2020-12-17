@@ -78,7 +78,7 @@ def home():
     # files_list = os.listdir(app.config['UPLOADED_PHOTOS_DEST'])
     file_urls = [photos.url(filename) for filename in files_list]
 
-    predictions = ['Model Not Found' for file_name in files_list]
+    predictions = [file_name for file_name in files_list]
     # predictions = [evaluator.predict_from_file(f'../app/uploads/{file_name}') for file_name in files_list]
     # predictions = [evaluator.predict(img_to_array(load_img(photos.path(file_name),
     #                                                        color_mode='rgb')).reshape(1, 40, 32, 3))
