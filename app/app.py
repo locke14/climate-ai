@@ -82,7 +82,7 @@ def f1(y_true, y_pred):
 
 
 try:
-    model = load_model(os.path.join(basedir, 'trained_model.h5'),
+    model = load_model('trained_model.h5',
                        custom_objects={'f1': f1,
                                        'recall': recall,
                                        'precision': precision})
