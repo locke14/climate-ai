@@ -8,8 +8,8 @@ from data.parser import Parser
 
 class Splitter(object):
     def __init__(self, data_path, split_ratio):
-        self._images_path = os.path.join(data_path, 'images-resized')
-        self._out_path = os.path.join(data_path, 'images-resized-split')
+        self._images_path = os.path.join(data_path, 'images')
+        self._out_path = os.path.join(data_path, 'images-split')
         self._split_ratio = split_ratio
         self._parser = Parser(data_path)
 

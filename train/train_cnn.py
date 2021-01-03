@@ -17,7 +17,7 @@ class CNNTrainer(ModelTrainer):
 
 if __name__ == '__main__':
     trainer = CNNTrainer('../images-split', (40, 24, 1), 12)
-    trainer.train(rescale=1/255., color_mode='grayscale', epochs=5)
+    trainer.train(rescale=1/255., color_mode='grayscale', epochs=200)
     trainer.plot_history(prefix='cnn', output_dir='results')
     print(trainer.evaluate(color_mode='grayscale'))
     trainer.save_model('./results/cnn.h5')

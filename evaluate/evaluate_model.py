@@ -38,5 +38,5 @@ class ModelEvaluator(object):
 
 
 if __name__ == '__main__':
-    evaluator = ModelEvaluator('../app/model.h5', (1, 40, 32, 3), 'rgb')
+    evaluator = ModelEvaluator('model.h5', (1, 40, 32, 1), 'grayscale')
     print(evaluator.predict_from_file('../images-resized-split/test/Hot-Spot-Multi/7921.jpg'))
