@@ -10,10 +10,13 @@ class Generator(object):
         self._train_generator = None
         self._test_generator = None
 
-    def init(self, rescale=None, validation_split=0.2):
-        self._train_generator = ImageDataGenerator()
+    def init(self):
+        self._train_generator = ImageDataGenerator(rescale=1/255.,
+                                                   horizontal_flip=True,
+                                                   vertical_flip=True,
+                                                   )
 
-        self._test_generator = ImageDataGenerator()
+        self._test_generator = ImageDataGenerator(rescale=1/255.,)
 
     def flow_from_train_dir(self, color_mode='rgb', batch_size=32):
         return self._train_generator.flow_from_directory(os.path.join(self._data_path, 'train'),

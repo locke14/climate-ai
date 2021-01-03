@@ -27,8 +27,9 @@ class ModelEvaluator(object):
                               11: 'Vegetation'}
 
     def predict_from_file(self, input_file):
-        im = load_img(input_file, color_mode=self._color_mode)
+        im = load_img(input_file, color_mode=self._color_mode, target_size=self._input_shape[1:3])
         arr = img_to_array(im).reshape(self._input_shape)
+        arr = arr/255.
         idx = np.argmax(self._model.predict(arr), axis=-1)
         return self._idx_to_class[idx[0]]
 
@@ -38,5 +39,5 @@ class ModelEvaluator(object):
 
 
 if __name__ == '__main__':
-    evaluator = ModelEvaluator('model.h5', (1, 40, 32, 1), 'grayscale')
-    print(evaluator.predict_from_file('../images-resized-split/test/Hot-Spot-Multi/7921.jpg'))
+    evaluator = ModelEvaluator('../model.h5', (1, 40, 24, 1), 'grayscale')
+    print(evaluator.predict_from_file('../images-split/test/No-Anomaly/10011.jpg'))

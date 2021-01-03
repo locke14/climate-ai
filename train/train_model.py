@@ -19,9 +19,9 @@ class ModelTrainer(object):
     def init_model(self):
         pass
 
-    def train(self, rescale=None, color_mode='rgb', epochs=50):
+    def train(self, color_mode='grayscale', epochs=50):
         self.init_model()
-        self._generator.init(rescale=rescale)
+        self._generator.init()
         self._train_history = self._model.model.fit(self._generator.flow_from_train_dir(color_mode=color_mode),
                                                     validation_data=self._generator.flow_from_test_dir(color_mode=color_mode),
                                                     epochs=epochs)
